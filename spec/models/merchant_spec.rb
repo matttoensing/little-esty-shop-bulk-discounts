@@ -81,6 +81,13 @@ RSpec.describe Merchant do
   describe 'class methods' do
 
     it '::top_merchants' do
+      InvoiceItem.destroy_all
+      Item.destroy_all
+      Transaction.destroy_all
+      Invoice.destroy_all
+      Customer.destroy_all
+      Merchant.destroy_all
+
 
       merchant1 = create(:merchant)
       merchant2 = create(:merchant)
@@ -145,14 +152,15 @@ RSpec.describe Merchant do
       transaction10 = create(:transaction, invoice_id: invoice10.id, result: 0)
 
       #test failed
+      
       data = Merchant.top_merchants
       expect(data).to eq([merchant5, merchant4, merchant3, merchant2, merchant1])
       expect(data[0].revenue).to eq(40)
       expect(data[4].revenue).to eq(20)
     end
   end
-
-
+  
+  
   describe '#best_revenue_day' do
     it 'returns the top revenue day for a given merchant' do
       InvoiceItem.destroy_all
@@ -161,49 +169,49 @@ RSpec.describe Merchant do
       Invoice.destroy_all
       Customer.destroy_all
       Merchant.destroy_all
-
+      
       @customers = []
       @invoices = []
       @items = []
       @transactions = []
       @invoice_items = []
-
+      
       @merchant_2 = create(:merchant)
-
+      
       @customers << create(:customer)
       @customers << create(:customer)
       @customers << create(:customer)
       @customers << create(:customer)
       @customers << create(:customer)
-
+      
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
-
+      
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2020,1,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2019,2,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2018,3,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2017,4,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2016,5,3,4,5,6))
-
+      
       @transactions << create(:transaction, invoice_id: @invoices[0].id)
       @transactions << create(:transaction, invoice_id: @invoices[1].id)
       @transactions << create(:transaction, invoice_id: @invoices[2].id)
       @transactions << create(:transaction, invoice_id: @invoices[3].id)
       @transactions << create(:transaction, invoice_id: @invoices[4].id)
-
+      
       @invoice_items << create(:invoice_item, item_id: @items[0].id, invoice_id: @invoices[0].id, status: 2, quantity: 4, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[1].id, invoice_id: @invoices[1].id, status: 2, quantity: 2, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[2].id, invoice_id: @invoices[2].id, status: 2, quantity: 3, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[3].id, invoice_id: @invoices[3].id, status: 2, quantity: 4, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[4].id, invoice_id: @invoices[4].id, status: 2, quantity: 1, unit_price: 10)
-
+      
       expect(@merchant_2.best_revenue_day).to eq(@invoices[0].created_at)
     end
   end
-
+  
   describe 'instance methods' do
     it 'collects enabled items' do
       expect(@merchant_1.enabled_items).to eq(@items)
@@ -211,6 +219,14 @@ RSpec.describe Merchant do
   end
 
   describe 'enable disable methods' do
+      InvoiceItem.destroy_all
+      Item.destroy_all
+      Transaction.destroy_all
+      Invoice.destroy_all
+      Customer.destroy_all
+      Merchant.destroy_all
+      # @merchant_1.destroy_all
+
     it 'returns only merchants with enabled status' do
       merchant1 = create(:merchant, enabled: true)
       merchant2 = create(:merchant, enabled: true)
@@ -221,6 +237,8 @@ RSpec.describe Merchant do
       expected = [merchant1, merchant2, merchant3]
 
       #test failed
+      expected = [@merchant_1, merchant1, merchant2, merchant3]
+      # require 'pry'; binding.pry
       expect(Merchant.enabled_merchants).to eq(expected)
     end
 
