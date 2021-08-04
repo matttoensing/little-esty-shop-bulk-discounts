@@ -150,6 +150,8 @@ RSpec.describe Merchant do
       transaction8 = create(:transaction, invoice_id: invoice8.id, result: 0)
       transaction9 = create(:transaction, invoice_id: invoice9.id, result: 0)
       transaction10 = create(:transaction, invoice_id: invoice10.id, result: 0)
+
+      #test failed
       
       data = Merchant.top_merchants
       expect(data).to eq([merchant5, merchant4, merchant3, merchant2, merchant1])
@@ -232,6 +234,9 @@ RSpec.describe Merchant do
       merchant4 = create(:merchant, enabled: false)
       merchant5 = create(:merchant, enabled: false)
 
+      expected = [merchant1, merchant2, merchant3]
+
+      #test failed
       expected = [@merchant_1, merchant1, merchant2, merchant3]
       # require 'pry'; binding.pry
       expect(Merchant.enabled_merchants).to eq(expected)
