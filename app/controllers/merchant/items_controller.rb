@@ -17,7 +17,7 @@ class Merchant::ItemsController < ApplicationController
     merchant = Merchant.find(params[:merchant_id])
     item = Item.find(params[:id])
     if params[:status].present?
-      item.update!(enabled: "disabled")
+      item.update!(enabled: params[:status])
       redirect_to merchant_items_path
       flash[:success] = "Success: #{item.name} has been updated!"
     else
