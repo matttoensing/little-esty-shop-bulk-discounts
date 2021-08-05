@@ -152,15 +152,15 @@ RSpec.describe Merchant do
       transaction10 = create(:transaction, invoice_id: invoice10.id, result: 0)
 
       #test failed
-      
+
       data = Merchant.top_merchants
       expect(data).to eq([merchant5, merchant4, merchant3, merchant2, merchant1])
       expect(data[0].revenue).to eq(40)
       expect(data[4].revenue).to eq(20)
     end
   end
-  
-  
+
+
   describe '#best_revenue_day' do
     it 'returns the top revenue day for a given merchant' do
       InvoiceItem.destroy_all
@@ -169,49 +169,49 @@ RSpec.describe Merchant do
       Invoice.destroy_all
       Customer.destroy_all
       Merchant.destroy_all
-      
+
       @customers = []
       @invoices = []
       @items = []
       @transactions = []
       @invoice_items = []
-      
+
       @merchant_2 = create(:merchant)
-      
+
       @customers << create(:customer)
       @customers << create(:customer)
       @customers << create(:customer)
       @customers << create(:customer)
       @customers << create(:customer)
-      
+
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
       @items << create(:item, merchant_id: @merchant_2.id, enabled: 0)
-      
+
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2020,1,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2019,2,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2018,3,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2017,4,3,4,5,6))
       @invoices << create(:invoice, customer_id: @customers.last.id, status: 2, created_at: DateTime.new(2016,5,3,4,5,6))
-      
+
       @transactions << create(:transaction, invoice_id: @invoices[0].id)
       @transactions << create(:transaction, invoice_id: @invoices[1].id)
       @transactions << create(:transaction, invoice_id: @invoices[2].id)
       @transactions << create(:transaction, invoice_id: @invoices[3].id)
       @transactions << create(:transaction, invoice_id: @invoices[4].id)
-      
+
       @invoice_items << create(:invoice_item, item_id: @items[0].id, invoice_id: @invoices[0].id, status: 2, quantity: 4, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[1].id, invoice_id: @invoices[1].id, status: 2, quantity: 2, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[2].id, invoice_id: @invoices[2].id, status: 2, quantity: 3, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[3].id, invoice_id: @invoices[3].id, status: 2, quantity: 4, unit_price: 10)
       @invoice_items << create(:invoice_item, item_id: @items[4].id, invoice_id: @invoices[4].id, status: 2, quantity: 1, unit_price: 10)
-      
+
       expect(@merchant_2.best_revenue_day).to eq(@invoices[0].created_at)
     end
   end
-  
+
   describe 'instance methods' do
     it 'collects enabled items' do
       expect(@merchant_1.enabled_items).to eq(@items)
@@ -270,14 +270,14 @@ RSpec.describe Merchant do
       invoice4 = create(:invoice, customer_id: customer.id, status: 2, created_at: DateTime.new(2021, 6, 25, 5,5,5))
       invoice5 = create(:invoice, customer_id: customer.id, status: 2, created_at: DateTime.new(2021, 6, 25, 5,5,5))
 
-      invoice_item1 = create(:invoice_item, quantity: 2, unit_price: 10, item_id: item1.id, invoice_id: invoice1.id, status: 2)
+      invoice_item1 = create(:invoice_item, quantity: 2, unit_price: 30, item_id: item1.id, invoice_id: invoice1.id, status: 2)
       invoice_item2 = create(:invoice_item, quantity: 2, unit_price: 14, item_id: item1.id, invoice_id: invoice2.id, status: 2)
       invoice_item3 = create(:invoice_item, quantity: 2, unit_price: 16, item_id: item2.id, invoice_id: invoice3.id, status: 2)
       invoice_item4 = create(:invoice_item, quantity: 2, unit_price: 18, item_id: item1.id, invoice_id: invoice4.id, status: 2)
       invoice_item5 = create(:invoice_item, quantity: 2, unit_price: 20, item_id: item2.id, invoice_id: invoice5.id, status: 2)
 
       transaction1 = create(:transaction, invoice_id: invoice1.id, result: 0)
-      transaction2 = create(:transaction, invoice_id: invoice2.id, result: 0)
+      transaction2 = create(:transaction, invoice_id: invoice1.id, result: 0)
       transaction3 = create(:transaction, invoice_id: invoice3.id, result: 0)
       transaction4 = create(:transaction, invoice_id: invoice4.id, result: 0)
       transaction5 = create(:transaction, invoice_id: invoice5.id, result: 0)
