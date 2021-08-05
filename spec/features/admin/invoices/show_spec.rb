@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Admin Invoice Show Page' do
   before(:each) do
     @customer = create(:customer)
-    
+
     @invoice = create(:invoice, customer_id: @customer.id)
 
     @merchant = create(:merchant)
@@ -28,16 +28,16 @@ RSpec.describe 'Admin Invoice Show Page' do
     @transaction7 = create(:transaction, invoice_id: @invoice.id)
 
     visit admin_invoice_path(@invoice.id)
-  end 
+  end
 
   describe 'Admin Invoice Show Page' do
     it 'Displays an Invoice and its attributes' do
 
-      expect(page).to have_content(@invoice.id)  
-      expect(page).to have_content(@invoice.status)  
-      expect(page).to have_content(@invoice.created_at.strftime("%A, %B, %d, %Y"))  
-      expect(page).to have_content("#{@customer.first_name} #{@customer.last_name}")  
-    end  
+      expect(page).to have_content(@invoice.id)
+      expect(page).to have_content(@invoice.status)
+      expect(page).to have_content(@invoice.created_at.strftime("%A, %B, %d, %Y"))
+      expect(page).to have_content("#{@customer.first_name} #{@customer.last_name}")
+    end
   end
 
   describe 'Admin Invoice Show Page: Invoice Item Information' do
@@ -45,16 +45,16 @@ RSpec.describe 'Admin Invoice Show Page' do
 
       expect(page).to have_content(@item1.name)
       expect(page).to have_content(@invoice_item1.quantity)
-      expect(page).to have_content(@item1.unit_price)
+      expect(page).to have_content(@item1.unit_price.to_f / 100)
       expect(page).to have_content(@invoice_item1.status)
     end
   end
 
   describe 'Admin Invoice Show Page: Total Revenue' do
-    it 'displays the total revenue' do 
+    it 'displays the total revenue' do
 
       within('#totalrev') do
-      
+
         expect(page).to have_content("Total Revenue: $#{(@invoice.total_revenue.to_f / 100)}")
       end
     end
@@ -68,11 +68,10 @@ RSpec.describe 'Admin Invoice Show Page' do
         expect(page).to have_content('cancelled')
       end
 
-      page.select 'completed', from: "invoice[status]" 
+      page.select 'completed', from: "invoice[status]"
 
       click_on "Submit"
       expect(page).to have_content('Invoice Status: completed')
     end
   end
 end
-
