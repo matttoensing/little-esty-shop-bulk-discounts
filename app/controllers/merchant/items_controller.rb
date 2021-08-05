@@ -20,12 +20,10 @@ class Merchant::ItemsController < ApplicationController
       item.update!(enabled: "disabled")
       redirect_to merchant_items_path
       flash[:success] = "Success: #{item.name} has been updated!"
-    elsif
+    else
       item.update(item_params)
       redirect_to merchant_item_path
       flash[:success] = "Success: #{item.name} has been updated!"
-    else
-      redirect_to edit_merchant_item_path
     end
   end
 
@@ -37,8 +35,6 @@ class Merchant::ItemsController < ApplicationController
     if @item.save
       redirect_to merchant_items_path
       flash[:success] = "Success: #{@item.name} has been created!"
-    else
-      redirect_to new_merchant_item_path
     end
   end
 
