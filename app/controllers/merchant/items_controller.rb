@@ -26,7 +26,6 @@ class Merchant::ItemsController < ApplicationController
       flash[:success] = "Success: #{item.name} has been updated!"
     else
       redirect_to edit_merchant_item_path
-      flash[:alert] = "Error: #{error_message(item.errors)}"
     end
   end
 
@@ -40,7 +39,6 @@ class Merchant::ItemsController < ApplicationController
       flash[:success] = "Success: #{@item.name} has been created!"
     else
       redirect_to new_merchant_item_path
-      flash[:alert] = "Error: #{error_message(item.errors)}"
     end
   end
 
