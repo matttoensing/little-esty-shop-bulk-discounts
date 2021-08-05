@@ -55,7 +55,7 @@ RSpec.describe 'Admin Invoice Show Page' do
 
       within('#totalrev') do
       
-        expect(page).to have_content("Total Revenue: $#{@invoice.total_revenue}")
+        expect(page).to have_content("Total Revenue: $#{(@invoice.total_revenue.to_f / 100)}")
       end
     end
   end
