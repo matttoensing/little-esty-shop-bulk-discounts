@@ -279,7 +279,7 @@ RSpec.describe Merchant do
       transaction1 = create(:transaction, invoice_id: invoice1.id, result: 0)
       transaction2 = create(:transaction, invoice_id: invoice1.id, result: 0)
       transaction3 = create(:transaction, invoice_id: invoice3.id, result: 0)
-      transaction4 = create(:transaction, invoice_id: invoice4.id, result: 0)
+      transaction4 = create(:transaction, invoice_id: invoice1.id, result: 0)
       transaction5 = create(:transaction, invoice_id: invoice5.id, result: 0)
 
       expect(merchant.best_day).to eq(invoice1.created_at)
