@@ -6,3 +6,10 @@
   <%= link_to 'View Details', merchant_discount_path(@merchant.id, discount.id) %>
   </div>
 <% end %>
+<br>
+<br>
+<h3>Upcoming Holidays</h3>
+<% @holidays.each do |holiday, date| %>
+  <p>Holiday: <%= holiday %>
+    on <%= date.to_date.strftime('%A %B %e, %Y') %></p>
+<% end %>
