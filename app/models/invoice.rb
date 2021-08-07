@@ -5,6 +5,7 @@ class Invoice < ApplicationRecord
   has_many :transactions
   has_many :merchants, through: :items
   has_many :discounts, through: :merchants
+
   enum status: { cancelled: 0,  "in progress"  => 1, completed: 2 }
 
   def self.incomplete_invoices
