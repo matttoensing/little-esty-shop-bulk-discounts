@@ -9,3 +9,5 @@
   <p><b><%= item["name"] %></b> | Invoiced On: <%= item["invoice_date"].strftime('%A %B %e, %Y') %><br>
   Invoice ID: <%= link_to "#{item["invoice_id"]}","/merchants/#{@merchant.id}/invoices/#{item["invoice_id"]}"  %></p>
 <% end %>
+
+<%= link_to "View Discounts", merchant_discounts_path(@merchant.id) %>

@@ -1,0 +1,7 @@
+<h3><%= @merchant.name %> Deals</h3>
+
+<% @discounts.each do |discount| %>
+<div id="discount-<%= discount.id %>">
+  <p><%= @discounts.index(discount) + 1 %>. Purchase <%= discount.quantity_threshold %> items and receive <%= number_to_percentage(discount.percentage * 100, precision: 0)  %> off your order! </p>
+  </div>
+<% end %>
