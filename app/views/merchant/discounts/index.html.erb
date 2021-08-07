@@ -4,10 +4,13 @@
 <div id="discount-<%= discount.id %>">
   <p><%= @discounts.index(discount) + 1 %>. <%= discount.quantity_threshold %> items for <%= number_to_percentage(discount.percentage * 100, precision: 0)  %> off.</p>
   <%= link_to 'View Details', merchant_discount_path(@merchant.id, discount.id) %>
+  <%= link_to 'Remove Discount', "/merchants/#{@merchant.id}/discounts/#{discount.id}", method: :delete %>
   </div>
 <% end %>
+
 <br>
 <br>
+
 <h3>Upcoming Holidays</h3>
 <% @holidays.each do |holiday, date| %>
   <p>Holiday: <%= holiday %>

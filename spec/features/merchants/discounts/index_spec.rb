@@ -15,17 +15,17 @@ RSpec.describe 'merchant discounts index page' do
       #unable to use view helper from html in test file, so math is done here to correctly represent discount value in test
       within "#discount-#{@discount1.id}" do
         expect(page).to have_content((@discount1.percentage * 100).to_i)
-        expect(page).to have_content(@discount1.quantity_threshold)
+        expect(page).to have_content("#{@discount1.quantity_threshold} items")
       end
 
       within "#discount-#{@discount2.id}" do
         expect(page).to have_content((@discount2.percentage * 100).to_i)
-        expect(page).to have_content(@discount2.quantity_threshold)
+        expect(page).to have_content("#{@discount2.quantity_threshold} items")
       end
 
       within "#discount-#{@discount3.id}" do
         expect(page).to have_content((@discount3.percentage * 100).to_i)
-        expect(page).to have_content(@discount3.quantity_threshold)
+        expect(page).to have_content("#{@discount3.quantity_threshold} items")
       end
     end
 
@@ -76,6 +76,33 @@ RSpec.describe 'merchant discounts index page' do
         click_link 'New Discount'
 
         expect(current_path).to eq(new_merchant_discount_path(@merchant.id))
+      end
+    end
+
+    describe 'deleting a discount' do
+      it 'next to each discount is a link to delete the specific discount' do
+
+        within "#discount-#{@discount1.id}" do
+          expect(page).to have_link('Remove Discount')
+        end
+
+        within "#discount-#{@discount2.id}" do
+          expect(page).to have_link('Remove Discount')
+        end
+
+        within "#discount-#{@discount3.id}" do
+          expect(page).to have_link('Remove Discount')
+        end
+      end
+
+      it 'when clicking the remove link, merchant is redirected back to dicount index page where discount information is no longer listed' do
+        within "#discount-#{@discount1.id}" do
+          click_link 'Remove Discount'
+        end
+
+        expect(current_path).to eq(merchant_discounts_path(@merchant.id))
+        expect(page).to_not have_content((@discount1.percentage * 100).to_i)
+        expect(page).to_not have_content("#{@discount1.quantity_threshold} items")
       end
     end
   end
