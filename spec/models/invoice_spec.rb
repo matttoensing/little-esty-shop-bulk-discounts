@@ -67,7 +67,37 @@ RSpec.describe Invoice do
     describe 'instance methods' do
       it 'returns the revenue after applying discounts for 1 item that meets the discount quantity threshold' do
         merchant = create(:merchant)
-        discount = create(:discount, merchant: merchant)
+        discount = create(:discount, merchant: merchant, percentage: 0.2)
+        item1 = create(:item, merchant: merchant, unit_price: 20)
+        item2 = create(:item, merchant: merchant, unit_price: 45)
+        customer = create(:customer)
+        invoice = create(:invoice, customer: customer)
+        transaction1 = create(:transaction, invoice: invoice)
+        transaction2 = create(:transaction, invoice: invoice)
+        invoice_item1 = create(:invoice_item, item: item1, invoice: invoice, unit_price: 20, quantity: 10)
+        invoice_item2 = create(:invoice_item, item: item2, invoice: invoice, unit_price: 45, quantity: 5)
+
+        expect(invoice.discounted_revenue_using_discounts).to eq(160)
+      end
+
+      it 'returns the revenue after applying discounts for 1 item that meets the discount quantity threshold' do
+        merchant = create(:merchant)
+        discount = create(:discount, merchant: merchant, percentage: 0.2)
+        item1 = create(:item, merchant: merchant, unit_price: 20)
+        item2 = create(:item, merchant: merchant, unit_price: 45)
+        customer = create(:customer)
+        invoice = create(:invoice, customer: customer)
+        transaction1 = create(:transaction, invoice: invoice)
+        transaction2 = create(:transaction, invoice: invoice)
+        invoice_item1 = create(:invoice_item, item: item1, invoice: invoice, unit_price: 20, quantity: 10)
+        invoice_item2 = create(:invoice_item, item: item2, invoice: invoice, unit_price: 45, quantity: 5)
+
+        expect(invoice.discounted_revenue_no_discounts).to eq(225)
+      end
+
+      it 'returns the revenue after applying discounts for 1 item that meets the discount quantity threshold' do
+        merchant = create(:merchant)
+        discount = create(:discount, merchant: merchant, percentage: 0.2)
         item1 = create(:item, merchant: merchant, unit_price: 20)
         item2 = create(:item, merchant: merchant, unit_price: 45)
         customer = create(:customer)

@@ -19,7 +19,15 @@ class Invoice < ApplicationRecord
     invoice_items.sum('quantity * unit_price')
   end
 
+  def discounted_revenue_using_discounts
+    self.merchants.joins(:discounts).joins(:invoice_items).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
+  end
+
+  def discounted_revenue_no_discounts
+    self.merchants.joins(:discounts).joins(:invoice_items).select(:invoice_items, :discounts).where('invoice_items.quantity < discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price)').to_i
+  end
+
   def discounted_revenue
-    invoice_items.joins(:discounts)
+    discounted_revenue_using_discounts + discounted_revenue_no_discounts
   end
 end

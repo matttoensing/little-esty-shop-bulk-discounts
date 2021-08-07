@@ -1,6 +1,6 @@
 <h1> Invoice #<%= @invoice.id %> </h1>
 <h3>Total Revenue: <%= number_to_currency(@invoice_items.total_revenue.to_f / 100) %></h3>
-<h3>Discounted Revenue: <%= number_to_currency(@invoice_items.discounted_revenue.to_f / 100) %></h3>
+<h3>Discounted Revenue: <%= number_to_currency(@invoice.discounted_revenue) %></h3>
 
 
 <div class="card border-light mb-3" style="max-width: 18rem;">
