@@ -13,7 +13,7 @@ RSpec.describe 'new merchant discount page' do
       new_discount = Discount.last
 
       expect(current_path).to eq(merchant_discounts_path(merchant.id))
-      expect(page).to have_content((new_discount.percentage * 100).to_i)
+      expect(page).to have_content(new_discount.percentage.to_i)
       expect(page).to have_content(new_discount.quantity_threshold)
     end
   end

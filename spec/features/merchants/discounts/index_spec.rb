@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe 'merchant discounts index page' do
   before(:each) do
     @merchant = create(:merchant)
-    @discount1 = @merchant.discounts.create!(percentage: 0.10, quantity_threshold: 10)
-    @discount2 = @merchant.discounts.create!(percentage: 0.20, quantity_threshold: 20)
-    @discount3 = @merchant.discounts.create!(percentage: 0.30, quantity_threshold: 30)
+    @discount1 = @merchant.discounts.create!(percentage: 10, quantity_threshold: 10)
+    @discount2 = @merchant.discounts.create!(percentage: 20, quantity_threshold: 20)
+    @discount3 = @merchant.discounts.create!(percentage: 30, quantity_threshold: 30)
 
     visit merchant_discounts_path(@merchant.id)
   end
@@ -14,17 +14,17 @@ RSpec.describe 'merchant discounts index page' do
     it 'displays each discount and attributes' do
       #unable to use view helper from html in test file, so math is done here to correctly represent discount value in test
       within "#discount-#{@discount1.id}" do
-        expect(page).to have_content((@discount1.percentage * 100).to_i)
+        expect(page).to have_content(@discount1.percentage.to_i)
         expect(page).to have_content("#{@discount1.quantity_threshold} items")
       end
 
       within "#discount-#{@discount2.id}" do
-        expect(page).to have_content((@discount2.percentage * 100).to_i)
+        expect(page).to have_content(@discount2.percentage.to_i)
         expect(page).to have_content("#{@discount2.quantity_threshold} items")
       end
 
       within "#discount-#{@discount3.id}" do
-        expect(page).to have_content((@discount3.percentage * 100).to_i)
+        expect(page).to have_content(@discount3.percentage.to_i)
         expect(page).to have_content("#{@discount3.quantity_threshold} items")
       end
     end
@@ -101,7 +101,7 @@ RSpec.describe 'merchant discounts index page' do
         end
 
         expect(current_path).to eq(merchant_discounts_path(@merchant.id))
-        expect(page).to_not have_content((@discount1.percentage * 100).to_i)
+        expect(page).to_not have_content(@discount1.percentage.to_i)
         expect(page).to_not have_content("#{@discount1.quantity_threshold} items")
       end
     end
