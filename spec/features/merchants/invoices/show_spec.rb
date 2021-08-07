@@ -57,4 +57,29 @@ RSpec.describe 'Merchants invoices show page' do
       expect(current_path).to eq("/merchants/#{@merchant_1.id}/invoices/#{@invoices[0].id}")
     end
   end
+
+  describe 'total revenue and discounted revenue' do
+    it 'displays the total revenue as well as the total discounted revenue for the merchant from this invoice' do
+      merchant = create(:merchant)
+      discount = create(:discount, merchant: merchant)
+      item1 = create(:item, merchant: merchant)
+      item2 = create(:item, merchant: merchant)
+      customer = create(:customer)
+      invoice = create(:invoice, customer: customer)
+      transaction1 = create(:transaction, invoice: invoice)
+      transaction2 = create(:transaction, invoice: invoice)
+      invoice_item1 = create(:invoice_item, item: item1, invoice: invoice)
+      invoice_item2 = create(:invoice_item, item: item2, invoice: invoice)
+
+      visit merchant_invoice_path(merchant.id, invoice.id)
+
+
+      # Merchant Invoice Show Page: Total Revenue and Discounted Revenue
+
+# As a merchant
+# When I visit my merchant invoice show page
+# Then I see the total revenue for my merchant from this invoice (not including discounts)
+# And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+    end
+  end
 end
