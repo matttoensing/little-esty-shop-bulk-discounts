@@ -2,7 +2,7 @@
 
 <% @discounts.each do |discount| %>
 <div id="discount-<%= discount.id %>">
-  <p><%= @discounts.index(discount) + 1 %>. <%= discount.quantity_threshold %> <%= number_to_percentage(discount.percentage * 100, precision: 0)  %> </p>
+  <p><%= @discounts.index(discount) + 1 %>. <%= discount.quantity_threshold %> items for <%= number_to_percentage(discount.percentage * 100, precision: 0)  %> off.</p>
   <%= link_to 'View Details', merchant_discount_path(@merchant.id, discount.id) %>
   </div>
 <% end %>
@@ -13,3 +13,5 @@
   <p>Holiday: <%= holiday %>
     on <%= date.to_date.strftime('%A %B %e, %Y') %></p>
 <% end %>
+
+<%= link_to 'New Discount', new_merchant_discount_path(@merchant.id) %>
