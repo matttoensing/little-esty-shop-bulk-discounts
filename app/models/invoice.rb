@@ -4,6 +4,7 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :transactions
   has_many :merchants, through: :items
+  has_many :discounts, through: :merchants
   enum status: { cancelled: 0,  "in progress"  => 1, completed: 2 }
 
   def self.incomplete_invoices
@@ -16,5 +17,9 @@ class Invoice < ApplicationRecord
 
   def total_revenue
     invoice_items.sum('quantity * unit_price')
+  end
+
+  def discounted_revenue
+    invoice_items.joins(:discounts)
   end
 end

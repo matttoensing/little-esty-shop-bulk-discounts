@@ -62,17 +62,20 @@ RSpec.describe 'Merchants invoices show page' do
     it 'displays the total revenue as well as the total discounted revenue for the merchant from this invoice' do
       merchant = create(:merchant)
       discount = create(:discount, merchant: merchant)
-      item1 = create(:item, merchant: merchant)
-      item2 = create(:item, merchant: merchant)
+      item1 = create(:item, merchant: merchant, unit_price: 20)
+      item2 = create(:item, merchant: merchant, unit_price: 45)
       customer = create(:customer)
       invoice = create(:invoice, customer: customer)
       transaction1 = create(:transaction, invoice: invoice)
       transaction2 = create(:transaction, invoice: invoice)
-      invoice_item1 = create(:invoice_item, item: item1, invoice: invoice)
-      invoice_item2 = create(:invoice_item, item: item2, invoice: invoice)
+      invoice_item1 = create(:invoice_item, item: item1, invoice: invoice, unit_price: 20, quantity: 10)
+      invoice_item2 = create(:invoice_item, item: item2, invoice: invoice, unit_price: 45, quantity: 5)
 
       visit merchant_invoice_path(merchant.id, invoice.id)
 
+      expect(page).to have_content(invoice.total_revenue)
+      expect(page).to have_content("Discounted Revenue: 385")
+      expect(page).to have_content("Discounted Revenue: #{invoice.discounted_revenue}")
 
       # Merchant Invoice Show Page: Total Revenue and Discounted Revenue
 
