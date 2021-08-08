@@ -20,7 +20,6 @@ class Merchant < ApplicationRecord
     items.where(enabled: 1)
   end
 
-
   def best_revenue_day
     items.joins(:transactions)
     .where("transactions.result = ?", 0)
