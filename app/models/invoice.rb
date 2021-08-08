@@ -4,7 +4,6 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :transactions
   has_many :merchants, through: :items
-  has_many :discounts, through: :merchants
 
   enum status: { cancelled: 0,  "in progress"  => 1, completed: 2 }
 
@@ -21,7 +20,7 @@ class Invoice < ApplicationRecord
   end
 
   def discounted_revenue_using_discounts
-    self.merchants.joins(:discounts).joins(:invoice_items).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
+    self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
   end
 
   def discounted_revenue_no_discounts
@@ -32,3 +31,6 @@ class Invoice < ApplicationRecord
     discounted_revenue_using_discounts + discounted_revenue_no_discounts
   end
 end
+
+
+# joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
