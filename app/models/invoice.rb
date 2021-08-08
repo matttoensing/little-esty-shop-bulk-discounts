@@ -20,6 +20,10 @@ class Invoice < ApplicationRecord
     invoice_items.sum('quantity * unit_price')
   end
 
+  def total_revenue_for_merchant(merchant_id)
+    items.joins(:invoice_items).where('items.merchant_id = ?', merchant_id).sum('invoice_items.quantity * invoice_items.unit_price')
+  end
+
 #   Merchant Invoice Show Page: Total Revenue and Discounted Revenue
 #
 # As a merchant
@@ -28,7 +32,7 @@ class Invoice < ApplicationRecord
 # And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
 
   def discounted_revenue_using_discounts
-    self.merchants.joins(:discounts).joins(:invoice_items).joins(:items).select(:invoice_items, :discounts).order(quantity_threshold: :desc).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
+    self.merchants.joins(:discounts).joins(:invoice_items).select(:invoice_items, :discounts).order(quantity_threshold: :desc).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
   end
 
   def discounted_revenue_no_discounts

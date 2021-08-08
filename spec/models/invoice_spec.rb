@@ -115,7 +115,14 @@ RSpec.describe Invoice do
           @invoice_item6 = create(:invoice_item, item: @item6, invoice: @invoice3, unit_price: 10, quantity: 10)
           @invoice_item7 = create(:invoice_item, item: @item7, invoice: @invoice3, unit_price: 45, quantity: 5)
           @invoice_item8 = create(:invoice_item, item: @item8, invoice: @invoice3, unit_price: 10, quantity: 15)
-          @invoice_item9 = create(:invoice_item, item: @item9, invoice: @invoice3, unit_price: 10, quantity: 15)
+          @invoice_item9 = create(:invoice_item, item: @item9, invoice: @invoice3, unit_price: 12, quantity: 15)
+        end
+
+        it 'can determine revenue for a single merchant' do
+          expect(@invoice1.total_revenue_for_merchant(@merchant1.id)).to eq(425)
+          expect(@invoice2.total_revenue_for_merchant(@merchant2.id)).to eq(785)
+          expect(@invoice3.total_revenue_for_merchant(@merchant3.id)).to eq(475)
+          expect(@invoice3.total_revenue_for_merchant(@merchant4.id)).to eq(180)
         end
 
         it 'will apply discount to one item that meets the discount quantity threshold' do
