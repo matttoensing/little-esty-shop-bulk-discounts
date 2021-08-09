@@ -126,9 +126,9 @@ RSpec.describe Invoice do
         end
 
         it 'will apply the higher discount to items that meet that threshold' do
-          expect(@invoice3.discounted_revenue_using_discounts(@item6.id)).to eq(0.2)
-          expect(@invoice3.discounted_revenue_using_discounts(@item7.id)).to eq(0.0)
-          expect(@invoice3.discounted_revenue_using_discounts(@item8.id)).to eq(0.3)
+          expect(@invoice3.item_discount(@item6.id)).to eq(0.2)
+          expect(@invoice3.item_discount(@item7.id)).to eq(0.0)
+          expect(@invoice3.item_discount(@item8.id)).to eq(0.3)
         end
 
         it 'will return the discounted or not discounted total for a given item' do
