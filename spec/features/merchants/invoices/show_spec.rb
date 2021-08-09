@@ -73,16 +73,8 @@ RSpec.describe 'Merchants invoices show page' do
 
       visit merchant_invoice_path(merchant.id, invoice.id)
 
-      expect(page).to have_content(invoice.total_revenue)
       expect(page).to have_content("Discounted Revenue: 385")
-      expect(page).to have_content("Discounted Revenue: #{invoice.discounted_revenue}")
-
-      # Merchant Invoice Show Page: Total Revenue and Discounted Revenue
-
-# As a merchant
-# When I visit my merchant invoice show page
-# Then I see the total revenue for my merchant from this invoice (not including discounts)
-# And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+      expect(page).to have_content("Discounted Revenue: #{invoice.discounted_revenue(merchant.id)}")
     end
   end
 end

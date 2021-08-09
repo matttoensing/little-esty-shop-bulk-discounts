@@ -29,7 +29,7 @@ class Invoice < ApplicationRecord
     merchant = item.merchant
     it = InvoiceItem.find_by(item_id: item_id, invoice_id: self.id)
 
-    max_percentage = merchant.discounts.where('quantity_threshold <= ?', it.quantity).order(:quantity_threshold).max_by { |discount| discount.percentage }
+    max_percentage = merchant.discounts.where('quantity_threshold <= ?', it.quantity).max_by { |discount| discount.percentage }
 
     return 0.0 if max_percentage.nil?
     max_percentage.percentage
@@ -37,7 +37,7 @@ class Invoice < ApplicationRecord
 
   def discounted_amount(item_id)
     item = Item.find(item_id)
-    it = InvoiceItem.find_by(item_id: item_id, invoice_id: self.id)
+    it = InvoiceItem.find_by(item_id: item.id, invoice_id: self.id)
 
     ((it.quantity * it.unit_price).to_f - ((it.quantity * it.unit_price) * item_discount(item.id)))
   end
@@ -46,9 +46,7 @@ class Invoice < ApplicationRecord
     merchant = Merchant.find(merchant_id)
     items = merchant.items
 
-    items.sum do |item|
-      discounted_amount(item.id)
-    end
+    merchant.discounts.empty? ? 0 : items.sum { |item| discounted_amount(item.id) }
   end
 end
 
