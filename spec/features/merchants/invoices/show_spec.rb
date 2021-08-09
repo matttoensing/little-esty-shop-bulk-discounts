@@ -109,7 +109,7 @@ RSpec.describe 'Merchants invoices show page' do
 
       click_on discount.name
 
-      expect(current_path).to eq(visit merchant_discount_path(merchant.id, discount.id))
+      expect(current_path).to eq(merchant_discount_path(merchant.id, discount.id))
     end
   end
 end

@@ -1,6 +1,6 @@
 <h1> Invoice #<%= @invoice.id %> </h1>
 <h3>Total Revenue: <%= number_to_currency(@invoice_items.total_revenue.to_f / 100) %></h3>
-<h3>Discounted Revenue: <%= number_to_currency(@invoice.discounted_revenue(@merchant.id)) %></h3>
+<h3>Discounted Revenue: <%= number_to_currency(@invoice.discounted_revenue(@merchant.id).to_f / 100) %></h3>
 
 <div class="card border-light mb-3" style="max-width: 18rem;">
   <div class="card-header"><b>For Customer: </b></div>
@@ -34,7 +34,11 @@
         <%= f.submit 'Update Item Status', class: 'btn btn-success' %>
       <% end %>
       </td>
-      <td><%= link_to 'Thanksgiving Sale' %></td>
+      <% if !invoice_item.applied_discount.nil? %>
+      <td><%= link_to invoice_item.applied_discount.name, merchant_discount_path(@merchant.id, invoice_item.applied_discount.id), class: 'btn btn-warning' %></td>
+      <% else %>
+      <td></td>
+      <% end %>
       </tr>
   <% end %>
 </tbody>

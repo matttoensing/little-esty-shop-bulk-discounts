@@ -27,7 +27,7 @@ class Invoice < ApplicationRecord
   def item_discount(item_id)
     item = Item.find(item_id)
     merchant = item.merchant
-    it = InvoiceItem.find_by(item_id: item_id, invoice_id: self.id)
+    it = InvoiceItem.find_by(item_id: item.id, invoice_id: self.id)
 
     max_percentage = merchant.discounts.where('quantity_threshold <= ?', it.quantity).maximum(:percentage)
 
@@ -43,9 +43,9 @@ class Invoice < ApplicationRecord
 
   def discounted_revenue(merchant_id)
     merchant = Merchant.find(merchant_id)
-    items = merchant.items
+    items = self.items
 
-    merchant.discounts.empty? ? total_revenue_for_merchant(merchant_id) : items.sum { |item| discounted_amount(item.id) }
+    merchant.discounts.empty? ? total_revenue : items.sum { |item| discounted_amount(item.id) }
   end
 end
 
