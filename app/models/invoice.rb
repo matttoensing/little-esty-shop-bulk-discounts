@@ -24,27 +24,37 @@ class Invoice < ApplicationRecord
     items.joins(:invoice_items).where('items.merchant_id = ?', merchant_id).sum('invoice_items.quantity * invoice_items.unit_price')
   end
 
-#   Merchant Invoice Show Page: Total Revenue and Discounted Revenue
-#
-# As a merchant
-# When I visit my merchant invoice show page
-# Then I see the total revenue for my merchant from this invoice (not including discounts)
-# And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+  def discounted_revenue_using_discounts(item_id)
+    item = Item.find(item_id)
+    merchant = item.merchant
+    it = InvoiceItem.find_by(item_id: item_id, invoice_id: self.id)
 
-  def discounted_revenue_using_discounts
-    self.merchants.joins(:discounts).joins(:invoice_items).select(:invoice_items, :discounts).order(quantity_threshold: :desc).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
+    max_percentage = merchant.discounts.where('quantity_threshold <= ?', it.quantity).order(:quantity_threshold).max_by { |discount| discount.percentage }
+
+    return 0.0 if max_percentage.nil?
+    max_percentage.percentage
   end
 
-  def discounted_revenue_no_discounts
-    self.merchants.joins(:discounts).joins(:invoice_items).select(:invoice_items, :discounts).where('invoice_items.quantity < discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price)').to_i
+  def discounted_amount(item_id)
+    item = Item.find(item_id)
+    it = InvoiceItem.find_by(item_id: item_id, invoice_id: self.id)
+
+    ((it.quantity * it.unit_price).to_f - ((it.quantity * it.unit_price) * discounted_revenue_using_discounts(item.id)))
   end
 
-  def discounted_revenue
-    discounted_revenue_using_discounts + discounted_revenue_no_discounts
+  def discounted_revenue(merchant_id)
+    merchant = Merchant.find(merchant_id)
+    items = merchant.items
+
+    items.sum do |item|
+      discounted_amount(item.id)
+    end
   end
 end
 
-  # self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
+
+
+# self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
 
 #  self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(CASE
 # #               WHEN invoice_items.quantity >= discounts.quantity_threshold
@@ -81,3 +91,9 @@ end
 #   end
 
 # count.to_i
+
+# self.merchants.joins(:discounts)
+# .joins(:invoice_items)
+# .select(:invoice_items, :discounts)
+# .where('invoice_items.quantity >= discounts.quantity_threshold').distinct
+# .sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i

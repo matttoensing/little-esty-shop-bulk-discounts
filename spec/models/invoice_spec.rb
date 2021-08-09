@@ -125,32 +125,22 @@ RSpec.describe Invoice do
           expect(@invoice3.total_revenue_for_merchant(@merchant4.id)).to eq(180)
         end
 
-        it 'will apply discount to one item that meets the discount quantity threshold' do
-          expect(@invoice1.discounted_revenue_using_discounts).to eq(160)
-        end
-
-        it 'will apply discount to items that meet the discount quantity threshold' do
-          expect(@invoice2.discounted_revenue_using_discounts).to eq(448)
-        end
-
         it 'will apply the higher discount to items that meet that threshold' do
-          expect(@invoice3.discounted_revenue_using_discounts).to eq(185)
+          expect(@invoice3.discounted_revenue_using_discounts(@item6.id)).to eq(0.2)
+          expect(@invoice3.discounted_revenue_using_discounts(@item7.id)).to eq(0.0)
+          expect(@invoice3.discounted_revenue_using_discounts(@item8.id)).to eq(0.3)
         end
 
-        it 'will not apply discount to items that do not meet the discount quantity threshold' do
-          expect(@invoice1.discounted_revenue_no_discounts).to eq(225)
+        it 'will return the discounted or not discounted total for a given item' do
+          expect(@invoice3.discounted_amount(@item6.id)).to eq(80)
+          expect(@invoice3.discounted_amount(@item7.id)).to eq(225)
         end
 
-        it 'will not apply discount to items that do not meet the discount quantity threshold' do
-          expect(@invoice2.discounted_revenue_no_discounts).to eq(225)
-        end
-
-        it 'will not apply discount to items that do not meet the discount quantity threshold' do
-          expect(@invoice3.discounted_revenue_no_discounts).to eq(225)
-        end
-
-        it 'returns the revenue after applying discounts for 1 item that meets the discount quantity threshold' do
-          expect(@invoice1.discounted_revenue).to eq(385)
+        it 'will return the discounted revenue for a given merchant' do
+          expect(@invoice1.discounted_revenue(@merchant1.id)).to eq(385.0)
+          expect(@invoice2.discounted_revenue(@merchant2.id)).to eq(673.0)
+          expect(@invoice3.discounted_revenue(@merchant3.id)).to eq(410.0)
+          expect(@invoice3.discounted_revenue(@merchant4.id)).to eq(180.0)
         end
       end
     end
