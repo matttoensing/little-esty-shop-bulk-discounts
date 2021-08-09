@@ -17,6 +17,7 @@
   <thead>
     <tr>
       <th scope="col">#</th>
+      <th scope="col">Name</th>
       <th scope="col">Discount Percentage</th>
       <th scope="col">Quantity</th>
       <th scope="col">View</th>
@@ -28,6 +29,7 @@
   <tbody>
     <tr>
       <th scope="row"><%= @discounts.index(discount) + 1 %></th>
+      <td><%= discount.name %></td>
       <td><%= number_to_percentage(discount.percentage, precision: 0) %></td>
       <td><%= discount.quantity_threshold %> items</td>
       <td><%= link_to 'View Details', merchant_discount_path(@merchant.id, discount.id), class: 'btn btn-secondary' %></td>
