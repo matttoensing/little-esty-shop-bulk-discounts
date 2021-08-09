@@ -73,7 +73,7 @@ RSpec.describe Invoice do
           Merchant.destroy_all
           # one item meets the threshold on the invoice
           @merchant1 = create(:merchant)
-          @discount1 = create(:discount, merchant: @merchant1, percentage: 0.2)
+          @discount1 = create(:discount, merchant: @merchant1, percentage: 20)
           @item1 = create(:item, merchant: @merchant1, unit_price: 20)
           @item2 = create(:item, merchant: @merchant1, unit_price: 45)
           @customer1 = create(:customer)
@@ -85,7 +85,7 @@ RSpec.describe Invoice do
 
           # 2 items meet the discount threhold on the invoice
           @merchant2 = create(:merchant)
-          @discount2 = create(:discount, merchant: @merchant2, percentage: 0.2)
+          @discount2 = create(:discount, merchant: @merchant2, percentage: 20)
           @item3 = create(:item, merchant: @merchant2, unit_price: 20)
           @item4 = create(:item, merchant: @merchant2, unit_price: 45)
           @item5 = create(:item, merchant: @merchant2, unit_price: 30)
@@ -102,12 +102,12 @@ RSpec.describe Invoice do
           # add another merchant with an item and create an invoice item for another test
           @merchant3 = create(:merchant)
           @merchant4 = create(:merchant)
-          @discount3 = create(:discount, merchant: @merchant3, percentage: 0.2, quantity_threshold: 10)
-          @discount4 = create(:discount, merchant: @merchant3, percentage: 0.3, quantity_threshold: 15)
+          @discount3 = create(:discount, merchant: @merchant3, percentage: 20, quantity_threshold: 10)
+          @discount4 = create(:discount, merchant: @merchant3, percentage: 30, quantity_threshold: 15)
           @item6 = create(:item, merchant: @merchant3, unit_price: 20)
           @item7 = create(:item, merchant: @merchant3, unit_price: 45)
           @item8 = create(:item, merchant: @merchant3, unit_price: 30)
-          @item9 = create(:item, merchant: @merchant4, unit_price: 30)
+          @item9 = create(:item, merchant: @merchant4, unit_price: 12)
           @customer3 = create(:customer)
           @invoice3 = create(:invoice, customer: @customer3)
           @transaction5 = create(:transaction, invoice: @invoice3)
@@ -126,14 +126,14 @@ RSpec.describe Invoice do
         end
 
         it 'will apply the higher discount to items that meet that threshold' do
-          expect(@invoice3.item_discount(@item6.id)).to eq(0.2)
-          expect(@invoice3.item_discount(@item7.id)).to eq(0.0)
-          expect(@invoice3.item_discount(@item8.id)).to eq(0.3)
+          expect(@invoice3.item_discount(@invoice_item6.id)).to eq(20)
+          expect(@invoice3.item_discount(@invoice_item7.id)).to eq(0.0)
+          expect(@invoice3.item_discount(@invoice_item8.id)).to eq(30)
         end
 
         it 'will return the discounted or not discounted total for a given item' do
-          expect(@invoice3.discounted_amount(@item6.id)).to eq(80)
-          expect(@invoice3.discounted_amount(@item7.id)).to eq(225)
+          expect(@invoice3.discounted_amount(@invoice_item6.id)).to eq(80)
+          expect(@invoice3.discounted_amount(@invoice_item7.id)).to eq(225)
         end
 
         it 'will return the discounted revenue for a given merchant' do
