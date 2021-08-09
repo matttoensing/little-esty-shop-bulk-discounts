@@ -73,7 +73,6 @@ RSpec.describe 'Merchants invoices show page' do
 
       visit merchant_invoice_path(merchant.id, invoice.id)
 
-      expect(page).to have_content("Discounted Revenue: 385")
       expect(page).to have_content("Discounted Revenue: #{invoice.discounted_revenue(merchant.id)}")
     end
   end
