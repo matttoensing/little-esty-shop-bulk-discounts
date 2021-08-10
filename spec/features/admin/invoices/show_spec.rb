@@ -77,9 +77,30 @@ RSpec.describe 'Admin Invoice Show Page' do
 
   describe 'bulk discount user stories' do
     describe 'total revenue and discounted revenue' do
-      it '' do
+      it 'displays total merchant revenue as well as discounted revenue on page' do
 
+        InvoiceItem.destroy_all
+        Item.destroy_all
+        Transaction.destroy_all
+        Invoice.destroy_all
+        Customer.destroy_all
+        Merchant.destroy_all
 
+        merchant = create(:merchant)
+        discount = create(:discount, merchant: merchant)
+        item1 = create(:item, merchant: merchant, unit_price: 20)
+        item2 = create(:item, merchant: merchant, unit_price: 45)
+        customer = create(:customer)
+        invoice = create(:invoice, customer: customer)
+        transaction1 = create(:transaction, invoice: invoice)
+        transaction2 = create(:transaction, invoice: invoice)
+        invoice_item1 = create(:invoice_item, item: item1, invoice: invoice, unit_price: 20, quantity: 10)
+        invoice_item2 = create(:invoice_item, item: item2, invoice: invoice, unit_price: 45, quantity: 5)
+
+        visit admin_invoice_path(invoice.id)
+
+        expect(page).to have_content(invoice.total_revenue_for_merchant(merchant.id))
+        expect(page).to have_content(invoice.discounted_revenue(merchant.id))
 # As an admin
 # When I visit an admin invoice show page
 # Then I see the total revenue from this invoice (not including discounts)
