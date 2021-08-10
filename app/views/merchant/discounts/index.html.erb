@@ -6,9 +6,9 @@
     Upcoming Holidays
   </button>
   <ul class="dropdown-menu">
-    <% @holidays.each do |holiday, date| %>
-      <li><strong><%= holiday %></strong>
-        <%= date.to_date.strftime('%A %B %e, %Y') %><li>
+    <% @holidays.each do |holiday| %>
+      <li><strong><%= holiday.name %></strong>
+        <%= holiday.date.to_date.strftime('%A %B %e, %Y') %><li>
     <% end %>
   </ul>
 </div>
