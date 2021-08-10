@@ -99,8 +99,8 @@ RSpec.describe 'Admin Invoice Show Page' do
 
         visit admin_invoice_path(invoice.id)
 
-        expect(page).to have_content(invoice.total_revenue_for_merchant(merchant.id))
-        expect(page).to have_content(invoice.discounted_revenue(merchant.id))
+        expect(page).to have_content(invoice.total_revenue_for_merchant(merchant.id) / 100)
+        expect(page).to have_content(invoice.discounted_revenue_for_admin / 100)
 # As an admin
 # When I visit an admin invoice show page
 # Then I see the total revenue from this invoice (not including discounts)

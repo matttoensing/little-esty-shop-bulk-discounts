@@ -9,7 +9,7 @@
   <div class="card-header">Invoice Revenue</div>
   <div class="card-body">
     <h5 class="card-title">Total Revenue: <%= number_to_currency(@invoice.total_revenue.to_f / 100) %></h5>
-    <h5 class="card-title">Discounted Revenue: <%= number_to_currency(@invoice.discounted_revenue(@merchant.id).to_f / 100) %></h5>
+    <h5 class="card-title">Discounted Revenue: <%= number_to_currency(@invoice.discounted_revenue_for_admin.to_f / 100) %></h5>
   </div>
 </div>
 
