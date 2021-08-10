@@ -97,7 +97,7 @@ RSpec.describe Invoice do
           @invoice_item4 = create(:invoice_item, item: @item4, invoice: @invoice2, unit_price: 45, quantity: 5)
           @invoice_item5 = create(:invoice_item, item: @item5, invoice: @invoice2, unit_price: 30, quantity: 12)
 
-          # 1 item meets the lower discount threhold and 1 item meets the 2nd discount item threshold on the invoice
+          # 1 item meets the lower discount threshold and 1 item meets the 2nd discount item threshold on the invoice
 
           # add another merchant with an item and create an invoice item for another test
           @merchant3 = create(:merchant)
