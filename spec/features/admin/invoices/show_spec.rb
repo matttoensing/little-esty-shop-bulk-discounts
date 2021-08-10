@@ -74,4 +74,17 @@ RSpec.describe 'Admin Invoice Show Page' do
       expect(page).to have_content('Invoice Status: completed')
     end
   end
+
+  describe 'bulk discount user stories' do
+    describe 'total revenue and discounted revenue' do
+      it '' do
+
+
+# As an admin
+# When I visit an admin invoice show page
+# Then I see the total revenue from this invoice (not including discounts)
+# And I see the total discounted revenue from this invoice which includes bulk discounts in the calculation
+      end
+    end
+  end
 end

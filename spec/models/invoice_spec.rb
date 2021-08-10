@@ -118,6 +118,13 @@ RSpec.describe Invoice do
           @invoice_item9 = create(:invoice_item, item: @item9, invoice: @invoice3, unit_price: 12, quantity: 15)
         end
 
+        it 'can return item_ids' do
+          items = [@item6, @item7, @item8]
+          expected = [@item6.id, @item7.id, @item8.id]
+
+          expect(@invoice3.item_ids(items)).to eq(expected)
+        end
+
         it 'can determine revenue for a single merchant' do
           expect(@invoice1.total_revenue_for_merchant(@merchant1.id)).to eq(425)
           expect(@invoice2.total_revenue_for_merchant(@merchant2.id)).to eq(785)

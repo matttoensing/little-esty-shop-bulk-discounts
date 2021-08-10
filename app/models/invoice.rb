@@ -20,8 +20,12 @@ class Invoice < ApplicationRecord
     invoice_items.sum('quantity * unit_price')
   end
 
+  def item_ids(items)
+    items.map { |item| item.id }
+  end
+
   def total_revenue_for_merchant(merchant_id)
-    items.joins(:invoice_items).where('items.merchant_id = ?', merchant_id).sum('invoice_items.quantity * invoice_items.unit_price')
+    self.items.joins(:invoice_items).where("invoice_items.item_id IN (?) AND items.merchant_id IN (?)", item_ids(self.items), merchant_id).distinct.sum('invoice_items.quantity * invoice_items.unit_price')
   end
 
   def item_discount(invoice_item_id)
@@ -44,10 +48,9 @@ class Invoice < ApplicationRecord
   def discounted_revenue(merchant_id)
     merchant = Merchant.find(merchant_id)
     items = merchant.items
-    x = items.map { |item| item.id }
-    invoice_items = self.invoice_items.where(item_id: x)
+    invoice_items = self.invoice_items.where(item_id: item_ids(items))
 
-    merchant.discounts.empty? ? total_revenue : invoice_items.sum { |item| discounted_amount(item.id) }
+    merchant.discounts.empty? ? total_revenue_for_merchant(merchant_id) : invoice_items.sum { |item| discounted_amount(item.id) }
   end
 end
 
