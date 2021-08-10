@@ -54,8 +54,12 @@ class Merchant < ApplicationRecord
   end
 
   def find_discount(discount_name)
-    discount = discounts.where(name: discount_name).first
+    discount = self.discounts.where(name: discount_name).first
 
     discount.id
+  end
+
+  def has_discount?(discount_name)
+    discounts.any? { |discount| discount.name == discount_name }
   end
 end

@@ -301,6 +301,18 @@ RSpec.describe Merchant do
           expect(merchant.find_discount('Veterans Day Sale')).to eq(discount2.id)
         end
       end
+
+      describe '#has_discount?' do
+        it 'returns the id of a discount given a name' do
+          merchant = create(:merchant)
+          discount1 = create(:discount, name: 'Labor Day Sale', percentage: 20, quantity_threshold: 10, merchant: merchant)
+          discount2 = create(:discount, name: 'Veterans Day Sale', percentage: 20, quantity_threshold: 10, merchant: merchant)
+
+          expect(merchant.has_discount?('Labor Day Sale')).to be(true)
+          expect(merchant.has_discount?('Veterans Day Sale')).to be(true)
+          expect(merchant.has_discount?('Black Friday Sale')).to be(false)
+        end
+      end
     end
   end
 end
