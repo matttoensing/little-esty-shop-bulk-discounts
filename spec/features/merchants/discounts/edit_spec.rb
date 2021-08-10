@@ -4,7 +4,7 @@ RSpec.describe 'edit discount information' do
   describe 'form to edit merchant discount' do
     it 'displays a form with fields pre populated with discount information' do
       merchant = create(:merchant)
-      discount = merchant.discounts.create!(percentage: 10, quantity_threshold: 10)
+      discount = merchant.discounts.create!(name: "Labor Day Sale", percentage: 10, quantity_threshold: 10)
 
       visit edit_merchant_discount_path(merchant.id, discount.id)
 
@@ -14,7 +14,7 @@ RSpec.describe 'edit discount information' do
 
     it 'merchant can edit any/all fields to edit discount and click on submit to redirect to the discount show page' do
       merchant = create(:merchant)
-      discount = merchant.discounts.create!(percentage: 13, quantity_threshold: 15)
+      discount = merchant.discounts.create!(name: "Labor Day Sale", percentage: 13, quantity_threshold: 15)
 
       visit edit_merchant_discount_path(merchant.id, discount.id)
 

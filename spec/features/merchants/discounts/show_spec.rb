@@ -15,7 +15,7 @@ RSpec.describe 'discount show page' do
 
     it 'displays a link to edit the discount information and when clicking the link, merchant is directed to an edit page' do
       merchant = create(:merchant)
-      discount = merchant.discounts.create!(percentage: 10, quantity_threshold: 10)
+      discount = merchant.discounts.create!(name: "Labor Day Sale", percentage: 10, quantity_threshold: 10)
 
       visit merchant_discount_path(merchant.id, discount.id)
 
