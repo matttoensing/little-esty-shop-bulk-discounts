@@ -62,6 +62,12 @@ class Invoice < ApplicationRecord
 
     calculate_discounted_revenue(invoice_items)
   end
+
+  def update_invoice_items(invoice_items)
+    invoice_items.each do |it|
+      it.update!(discount: item_discount(it.id))
+    end
+  end
 end
 
 

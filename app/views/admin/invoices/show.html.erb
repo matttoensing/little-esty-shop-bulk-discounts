@@ -15,11 +15,14 @@
 
 <p><%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
 
-<% @invoice.items.each do |item| %></p>
+<% @invoice.items.each do |item| %>
+  <div id="item-<%= item.id %>">
   <p>Item Name: <%=item.name%>
   <p>Unit Price: <%= item.unit_price.to_f / 100 %></p>
   <p>Quantity: <%= InvoiceItem.find_by(invoice_id: @invoice.id, item_id: item.id).quantity %></p>
   <p>Status: <%= InvoiceItem.find_by(invoice_id: @invoice.id, item_id: item.id).status %></p>
+  <p>Discount: <%= InvoiceItem.find_by(invoice_id: @invoice.id, item_id: item.id).discount %></p>
+    </div>
 <%end%>
 
 <section id='totalrev'>

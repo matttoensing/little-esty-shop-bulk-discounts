@@ -103,7 +103,6 @@ RSpec.describe 'Admin Invoice Show Page' do
       end
     end
 
-# changes 
     describe 'admin changing invoice status to complete' do
       it 'if a discount was applied to the invoice item, it will be saved for future reference' do
         merchant = create(:merchant)
@@ -119,13 +118,27 @@ RSpec.describe 'Admin Invoice Show Page' do
 
         visit admin_invoice_path(invoice.id)
 
-        expect(invoice_item1.discount).to have(0)
+        within "#item-#{item1.id}" do
+          expect(page).to eq("Discount: #{invoice_item1.discount}")
+        end
+
+        within "#item-#{item2.id}" do
+          expect(page).to eq("Discount: #{invoice_item2.discount}")
+        end
 
         page.select 'completed', from: "invoice[status]"
 
         click_on "Submit"
 
-        expect(invoice_item1.discount).to have(20)
+        within "#item-#{item1.id}" do
+          expect(page).to have_content(20)
+          expect(page).to eq("Discount: #{invoice_item1.discount}")
+        end
+
+        within "#item-#{item2.id}" do
+          expect(page).to have_content(0)
+          expect(page).to eq("Discount: #{invoice_item2.discount}")
+        end
       end
     end
   end
