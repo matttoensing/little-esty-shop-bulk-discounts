@@ -52,4 +52,10 @@ class Merchant < ApplicationRecord
     .pluck(Arel.sql('invoices.created_at'))
     .first
   end
+
+  def find_discount(discount_name)
+    discount = discounts.where(name: discount_name).first
+
+    discount.id
+  end
 end
