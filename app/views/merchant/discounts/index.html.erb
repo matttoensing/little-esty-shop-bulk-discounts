@@ -7,8 +7,11 @@
   </button>
   <ul class="dropdown-menu">
     <% @holidays.each do |holiday| %>
+    <div id="holiday-<%= holiday.date %>">
       <li><strong><%= holiday.name %></strong>
         <%= holiday.date.to_date.strftime('%A %B %e, %Y') %><li>
+          <%= button_to 'Create Discount', holiday_discount_path(@merchant.id), params: {name: holiday.name }, method: :get %>
+        </div>
     <% end %>
   </ul>
 </div>
