@@ -62,7 +62,6 @@ RSpec.describe 'Admin Invoice Show Page' do
 
   describe 'Admin Invoice Show Page: Update Invoice Status' do
     it 'has a select field to change status' do
-
       within('#status') do
         expect(page).to have_content('Invoice Status: cancelled')
         expect(page).to have_content('cancelled')
@@ -101,6 +100,31 @@ RSpec.describe 'Admin Invoice Show Page' do
 
         expect(page).to have_content(invoice.total_revenue_for_merchant(merchant.id) / 100)
         expect(page).to have_content(invoice.discounted_revenue_for_admin / 100)
+      end
+    end
+
+    describe 'admin changing invoice status to complete' do
+      it 'if a discount was applied to the invoice item, it will be saved for future reference' do
+        merchant = create(:merchant)
+        discount = create(:discount, merchant: merchant)
+        item1 = create(:item, merchant: merchant, unit_price: 20)
+        item2 = create(:item, merchant: merchant, unit_price: 45)
+        customer = create(:customer)
+        invoice = create(:invoice, customer: customer, status: 1)
+        transaction1 = create(:transaction, invoice: invoice)
+        transaction2 = create(:transaction, invoice: invoice)
+        invoice_item1 = create(:invoice_item, item: item1, invoice: invoice, unit_price: 20, quantity: 10)
+        invoice_item2 = create(:invoice_item, item: item2, invoice: invoice, unit_price: 45, quantity: 5)
+
+        visit admin_invoice_path(invoice.id)
+
+        expect(invoice_item1.discount).to have(0)
+
+        page.select 'completed', from: "invoice[status]"
+
+        click_on "Submit"
+
+        expect(invoice_item1.discount).to have(20)
       end
     end
   end
