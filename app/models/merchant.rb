@@ -60,6 +60,6 @@ class Merchant < ApplicationRecord
   end
 
   def has_discount?(discount_name)
-    discounts.any? { |discount| discount.name == discount_name }
+    discount = discounts.any? { |discount| discount.name == discount_name }
   end
 end
