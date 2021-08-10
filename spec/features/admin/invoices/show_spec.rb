@@ -119,11 +119,11 @@ RSpec.describe 'Admin Invoice Show Page' do
         visit admin_invoice_path(invoice.id)
 
         within "#item-#{item1.id}" do
-          expect(page).to eq("Discount: #{invoice_item1.discount}")
+          expect(page).to have_content("Discount: 0")
         end
 
         within "#item-#{item2.id}" do
-          expect(page).to eq("Discount: #{invoice_item2.discount}")
+          expect(page).to have_content("Discount: #{invoice_item2.discount}")
         end
 
         page.select 'completed', from: "invoice[status]"
@@ -131,13 +131,12 @@ RSpec.describe 'Admin Invoice Show Page' do
         click_on "Submit"
 
         within "#item-#{item1.id}" do
-          expect(page).to have_content(20)
-          expect(page).to eq("Discount: #{invoice_item1.discount}")
+          expect(page).to have_content("Discount: 20")
         end
 
         within "#item-#{item2.id}" do
-          expect(page).to have_content(0)
-          expect(page).to eq("Discount: #{invoice_item2.discount}")
+          expect(page).to have_content("Discount: 0")
+          expect(page).to have_content("Discount: #{invoice_item2.discount}")
         end
       end
     end
