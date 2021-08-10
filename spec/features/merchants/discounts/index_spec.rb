@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe 'merchant discounts index page' do
   before(:each) do
     @merchant = create(:merchant)
-    @discount1 = @merchant.discounts.create!(percentage: 10, quantity_threshold: 10)
-    @discount2 = @merchant.discounts.create!(percentage: 20, quantity_threshold: 20)
-    @discount3 = @merchant.discounts.create!(percentage: 30, quantity_threshold: 30)
+    @discount1 = @merchant.discounts.create!(name: 'Labor Day Sale', percentage: 10, quantity_threshold: 10)
+    @discount2 = @merchant.discounts.create!(name: 'Thanksgiving Day Sale', percentage: 20, quantity_threshold: 20)
+    @discount3 = @merchant.discounts.create!(name: '3 Day Weekend Sale', percentage: 30, quantity_threshold: 30)
 
     visit merchant_discounts_path(@merchant.id)
   end
@@ -54,21 +54,21 @@ RSpec.describe 'merchant discounts index page' do
 
     describe 'holidays content' do
       it 'displays the name and date of the next 3 upcoming holdays' do
-        holidays = {
-          "Labor Day" => "2021-09-06",
-          "Columbus Day" => "2021-10-11",
-          "Veterans Day" => "2021-11-11"
-        }
+        holidays = [
+            {:date=>"2021-09-06", :name=>"Labor Day"},
+            {:date=>"2021-10-11", :name=>"Columbus Day"},
+            {:date=>"2021-11-11", :name=>"Veterans Day"}
+          ]
 
-        allow_any_instance_of(DateSwaggerService).to receive(:next_three_holidays).and_return(holidays)
+        allow(DateSwaggerService).to receive(:next_three_holidays).and_return(holidays)
 
         expect(page).to have_content("Upcoming Holidays")
-        expect(page).to have_content(holidays.keys[0])
-        expect(page).to have_content(holidays.keys[1])
-        expect(page).to have_content(holidays.keys[2])
-        expect(page).to have_content("Monday September 6, 2021")
-        expect(page).to have_content("Monday October 11, 2021")
-        expect(page).to have_content("Thursday November 11, 2021")
+        expect(page).to have_content(holidays[0][:name])
+        expect(page).to have_content('Monday September 6, 2021')
+        expect(page).to have_content(holidays[1][:name])
+        expect(page).to have_content('Monday October 11, 2021')
+        expect(page).to have_content(holidays[2][:name])
+        expect(page).to have_content('Thursday November 11, 2021')
       end
     end
 
