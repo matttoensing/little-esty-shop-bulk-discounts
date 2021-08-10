@@ -14,16 +14,19 @@ RSpec.describe 'merchant discounts index page' do
     it 'displays each discount and attributes' do
       #unable to use view helper from html in test file, so math is done here to correctly represent discount value in test
       within "#discount-#{@discount1.id}" do
+        expect(page).to have_content(@discount1.name)
         expect(page).to have_content(@discount1.percentage.to_i)
         expect(page).to have_content("#{@discount1.quantity_threshold} items")
       end
 
       within "#discount-#{@discount2.id}" do
+        expect(page).to have_content(@discount2.name)
         expect(page).to have_content(@discount2.percentage.to_i)
         expect(page).to have_content("#{@discount2.quantity_threshold} items")
       end
 
       within "#discount-#{@discount3.id}" do
+        expect(page).to have_content(@discount3.name)
         expect(page).to have_content(@discount3.percentage.to_i)
         expect(page).to have_content("#{@discount3.quantity_threshold} items")
       end

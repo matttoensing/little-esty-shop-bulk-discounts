@@ -20,32 +20,47 @@ class Invoice < ApplicationRecord
     invoice_items.sum('quantity * unit_price')
   end
 
+  def item_ids(items)
+    items.map { |item| item.id }
+  end
+
   def total_revenue_for_merchant(merchant_id)
-    items.joins(:invoice_items).where('items.merchant_id = ?', merchant_id).sum('invoice_items.quantity * invoice_items.unit_price')
+    self.items.joins(:invoice_items).where("invoice_items.item_id IN (?) AND items.merchant_id IN (?)", item_ids(self.items), merchant_id).distinct.sum('invoice_items.quantity * invoice_items.unit_price')
   end
 
-  def item_discount(item_id)
-    item = Item.find(item_id)
+  def item_discount(invoice_item_id)
+    it = InvoiceItem.find(invoice_item_id)
+    item = Item.find(it.item_id)
     merchant = item.merchant
-    it = InvoiceItem.find_by(item_id: item_id, invoice_id: self.id)
 
-    max_percentage = merchant.discounts.where('quantity_threshold <= ?', it.quantity).max_by { |discount| discount.percentage }
+    max_percentage = merchant.discounts.where('discounts.quantity_threshold <= ?', it.quantity).maximum(:percentage)
 
-    max_percentage.nil? ? 0.0 : max_percentage.percentage
+    max_percentage.nil? ? 0.0 : max_percentage
   end
 
-  def discounted_amount(item_id)
-    item = Item.find(item_id)
-    it = InvoiceItem.find_by(item_id: item.id, invoice_id: self.id)
+  def discounted_amount(invoice_item_id)
+    it = InvoiceItem.find(invoice_item_id)
+    item = Item.find(it.item_id)
 
-    ((it.quantity * it.unit_price).to_f - ((it.quantity * it.unit_price) * item_discount(item.id)))
+    ((it.quantity * it.unit_price).to_f - ((it.quantity * it.unit_price) * (item_discount(it.id) / 100)))
+  end
+
+  def calculate_discounted_revenue(invoice_items)
+    invoice_items.sum { |item| discounted_amount(item.id) }
   end
 
   def discounted_revenue(merchant_id)
     merchant = Merchant.find(merchant_id)
     items = merchant.items
+    invoice_items = self.invoice_items.where(item_id: item_ids(items))
 
-    merchant.discounts.empty? ? total_revenue_for_merchant(merchant_id) : items.sum { |item| discounted_amount(item.id) }
+    merchant.discounts.empty? ? total_revenue_for_merchant(merchant_id) : calculate_discounted_revenue(invoice_items)
+  end
+
+  def discounted_revenue_for_admin
+    invoice_items = self.invoice_items
+
+    calculate_discounted_revenue(invoice_items)
   end
 end
 

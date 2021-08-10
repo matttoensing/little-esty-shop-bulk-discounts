@@ -4,10 +4,11 @@ RSpec.describe 'discount show page' do
   describe 'contents' do
     it 'displays discount quantity threshold and percentage discount' do
       merchant = create(:merchant)
-      discount = merchant.discounts.create!(percentage: 10, quantity_threshold: 10)
+      discount = merchant.discounts.create!(name: "Labor Day Sale", percentage: 10, quantity_threshold: 10)
 
       visit merchant_discount_path(merchant.id, discount.id)
 
+      expect(page).to have_content("Name: #{discount.name}")
       expect(page).to have_content("Discount: #{discount.percentage.to_i}%")
       expect(page).to have_content("Number of Items #{discount.quantity_threshold}")
     end

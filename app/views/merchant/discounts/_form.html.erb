@@ -1,4 +1,7 @@
 <%= form_with url: path, method: method, local: true do |form| %>
+  <%= form.label :name %><br>
+  <%= form.text_field :name, value: name_value %><br>
+  <br>
   <%= form.label :percentage %><br>
   <%= form.number_field :percentage, value: percentage_value %>%<br>
   <br>

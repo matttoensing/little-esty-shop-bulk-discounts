@@ -10,4 +10,8 @@ class InvoiceItem < ApplicationRecord
   def self.total_revenue
     sum("unit_price * quantity")
   end
+
+  def applied_discount
+    self.item.merchant.discounts.where("#{self.quantity} >= quantity_threshold").order(quantity_threshold: :desc).first
+  end
 end

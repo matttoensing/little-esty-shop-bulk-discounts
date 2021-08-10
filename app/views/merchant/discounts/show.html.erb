@@ -1,5 +1,6 @@
 <h1>Discount Page Details</h1>
 
+<p>Name: <%= @discount.name %></p>
 <p>Discount: <%= number_to_percentage(@discount.percentage, precision: 0) %></p>
 <p>Number of Items <%= @discount.quantity_threshold %></p>
 

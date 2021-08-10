@@ -37,4 +37,26 @@ RSpec.describe InvoiceItem do
       end
     end
   end
+
+  describe 'bulk discount methods' do
+    describe 'instance methods' do
+      describe '#applied_discount' do
+        it 'returns a discount if applied or nil if no discount is applied' do
+          merchant1 = create(:merchant)
+          discount1 = create(:discount, merchant: merchant1, percentage: 0.2)
+          item1 = create(:item, merchant: merchant1, unit_price: 20)
+          item2 = create(:item, merchant: merchant1, unit_price: 45)
+          customer1 = create(:customer)
+          invoice1 = create(:invoice, customer: customer1)
+          transaction1 = create(:transaction, invoice: invoice1)
+          transaction2 = create(:transaction, invoice: invoice1)
+          invoice_item1 = create(:invoice_item, item: item1, invoice: invoice1, unit_price: 20, quantity: 10)
+          invoice_item2 = create(:invoice_item, item: item2, invoice: invoice1, unit_price: 45, quantity: 5)
+
+          expect(invoice_item1.applied_discount).to eq(discount1)
+          expect(invoice_item2.applied_discount).to eq(nil)
+        end
+      end
+    end
+  end
 end
