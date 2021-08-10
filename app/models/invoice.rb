@@ -33,7 +33,7 @@ class Invoice < ApplicationRecord
     item = Item.find(it.item_id)
     merchant = item.merchant
 
-    max_percentage = merchant.discounts.where('quantity_threshold <= ?', it.quantity).maximum(:percentage)
+    max_percentage = merchant.discounts.where('discounts.quantity_threshold <= ?', it.quantity).maximum(:percentage)
 
     max_percentage.nil? ? 0.0 : max_percentage
   end
@@ -45,12 +45,22 @@ class Invoice < ApplicationRecord
     ((it.quantity * it.unit_price).to_f - ((it.quantity * it.unit_price) * (item_discount(it.id) / 100)))
   end
 
+  def calculate_discounted_revenue(invoice_items)
+    invoice_items.sum { |item| discounted_amount(item.id) }
+  end
+
   def discounted_revenue(merchant_id)
     merchant = Merchant.find(merchant_id)
     items = merchant.items
     invoice_items = self.invoice_items.where(item_id: item_ids(items))
 
-    merchant.discounts.empty? ? total_revenue_for_merchant(merchant_id) : invoice_items.sum { |item| discounted_amount(item.id) }
+    merchant.discounts.empty? ? total_revenue_for_merchant(merchant_id) : calculate_discounted_revenue(invoice_items)
+  end
+
+  def discounted_revenue_for_admin
+    invoice_items = self.invoice_items
+
+    calculate_discounted_revenue(invoice_items)
   end
 end
 

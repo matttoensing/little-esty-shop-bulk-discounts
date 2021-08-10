@@ -5,6 +5,14 @@
 <p><%= @invoice.status %></p>
 <p><%= @invoice.created_at.strftime("%A, %B, %d, %Y") %><p>
 
+<div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+  <div class="card-header">Invoice Revenue</div>
+  <div class="card-body">
+    <h5 class="card-title">Total Revenue: <%= number_to_currency(@invoice.total_revenue.to_f / 100) %></h5>
+    <h5 class="card-title">Discounted Revenue: <%= number_to_currency(@invoice.discounted_revenue(@merchant.id).to_f / 100) %></h5>
+  </div>
+</div>
+
 <p><%= @invoice.customer.first_name%> <%= @invoice.customer.last_name%></p>
 
 <% @invoice.items.each do |item| %></p>

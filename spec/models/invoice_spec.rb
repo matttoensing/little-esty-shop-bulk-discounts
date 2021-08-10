@@ -73,7 +73,7 @@ RSpec.describe Invoice do
           Merchant.destroy_all
           # one item meets the threshold on the invoice
           @merchant1 = create(:merchant)
-          @discount1 = create(:discount, merchant: @merchant1, percentage: 20)
+          @discount1 = create(:discount, merchant: @merchant1, percentage: 20, quantity_threshold: 10)
           @item1 = create(:item, merchant: @merchant1, unit_price: 20)
           @item2 = create(:item, merchant: @merchant1, unit_price: 45)
           @customer1 = create(:customer)
@@ -143,11 +143,22 @@ RSpec.describe Invoice do
           expect(@invoice3.discounted_amount(@invoice_item7.id)).to eq(225)
         end
 
+        it 'can calculate total discount revenue' do
+          collection = @invoice1.invoice_items
+          expect(@invoice1.calculate_discounted_revenue(collection)).to eq(385.0)
+        end
+
         it 'will return the discounted revenue for a given merchant' do
           expect(@invoice1.discounted_revenue(@merchant1.id)).to eq(385.0)
           expect(@invoice2.discounted_revenue(@merchant2.id)).to eq(673.0)
           expect(@invoice3.discounted_revenue(@merchant3.id)).to eq(410.0)
           expect(@invoice3.discounted_revenue(@merchant4.id)).to eq(180.0)
+        end
+
+        it 'will return the discounted amount for entire invoice for merchant' do
+          expect(@invoice1.discounted_revenue_for_admin).to eq(385.0)
+          expect(@invoice2.discounted_revenue_for_admin).to eq(673.0)
+          expect(@invoice3.discounted_revenue_for_admin).to eq(590.0)
         end
       end
     end
