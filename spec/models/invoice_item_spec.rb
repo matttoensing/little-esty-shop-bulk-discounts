@@ -43,7 +43,7 @@ RSpec.describe InvoiceItem do
       describe '#applied_discount' do
         it 'returns a discount if applied or nil if no discount is applied' do
           merchant1 = create(:merchant)
-          discount1 = create(:discount, merchant: merchant1, percentage: 0.2)
+          discount1 = create(:discount, merchant: merchant1, percentage: 20)
           item1 = create(:item, merchant: merchant1, unit_price: 20)
           item2 = create(:item, merchant: merchant1, unit_price: 45)
           customer1 = create(:customer)
