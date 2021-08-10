@@ -103,6 +103,7 @@ RSpec.describe 'Admin Invoice Show Page' do
       end
     end
 
+# changes 
     describe 'admin changing invoice status to complete' do
       it 'if a discount was applied to the invoice item, it will be saved for future reference' do
         merchant = create(:merchant)
