@@ -52,4 +52,14 @@ class Merchant < ApplicationRecord
     .pluck(Arel.sql('invoices.created_at'))
     .first
   end
+
+  def find_discount(discount_name)
+    discount = self.discounts.where(name: discount_name).first
+
+    discount.id
+  end
+
+  def has_discount?(discount_name)
+    discount = discounts.any? { |discount| discount.name == discount_name }
+  end
 end

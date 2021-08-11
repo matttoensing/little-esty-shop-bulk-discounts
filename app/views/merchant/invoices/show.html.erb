@@ -34,7 +34,7 @@
         <%= f.submit 'Update Item Status', class: 'btn btn-success' %>
       <% end %>
       </td>
-      <% if !invoice_item.applied_discount.nil? %>
+      <% if invoice_item.applied_discount %>
       <td><%= link_to invoice_item.applied_discount.name, merchant_discount_path(@merchant.id, invoice_item.applied_discount.id), class: 'btn btn-warning' %></td>
       <% else %>
       <td></td>

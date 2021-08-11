@@ -103,7 +103,6 @@ RSpec.describe 'Admin Invoice Show Page' do
       end
     end
 
-# changes 
     describe 'admin changing invoice status to complete' do
       it 'if a discount was applied to the invoice item, it will be saved for future reference' do
         merchant = create(:merchant)
@@ -119,13 +118,61 @@ RSpec.describe 'Admin Invoice Show Page' do
 
         visit admin_invoice_path(invoice.id)
 
-        expect(invoice_item1.discount).to have(0)
+        within "#item-#{item1.id}" do
+          expect(page).to have_content("Discount: 0")
+        end
+
+        within "#item-#{item2.id}" do
+          expect(page).to have_content("Discount: #{invoice_item2.discount}")
+        end
 
         page.select 'completed', from: "invoice[status]"
 
         click_on "Submit"
 
-        expect(invoice_item1.discount).to have(20)
+        within "#item-#{item1.id}" do
+          expect(page).to have_content("Discount: 20")
+        end
+
+        within "#item-#{item2.id}" do
+          expect(page).to have_content("Discount: 0")
+          expect(page).to have_content("Discount: #{invoice_item2.discount}")
+        end
+      end
+
+      it 'will not save a value if the select field in not selected as complete' do
+        merchant = create(:merchant)
+        discount = create(:discount, merchant: merchant)
+        item1 = create(:item, merchant: merchant, unit_price: 20)
+        item2 = create(:item, merchant: merchant, unit_price: 45)
+        customer = create(:customer)
+        invoice = create(:invoice, customer: customer, status: 1)
+        transaction1 = create(:transaction, invoice: invoice)
+        transaction2 = create(:transaction, invoice: invoice)
+        invoice_item1 = create(:invoice_item, item: item1, invoice: invoice, unit_price: 20, quantity: 10)
+        invoice_item2 = create(:invoice_item, item: item2, invoice: invoice, unit_price: 45, quantity: 5)
+
+        visit admin_invoice_path(invoice.id)
+
+        within "#item-#{item1.id}" do
+          expect(page).to have_content("Discount: 0")
+        end
+
+        within "#item-#{item2.id}" do
+          expect(page).to have_content("Discount: #{invoice_item2.discount}")
+        end
+
+        page.select 'cancelled', from: "invoice[status]"
+
+        click_on "Submit"
+
+        within "#item-#{item1.id}" do
+          expect(page).to have_content("Discount: 0")
+        end
+
+        within "#item-#{item2.id}" do
+          expect(page).to have_content("Discount: 0")
+        end
       end
     end
   end

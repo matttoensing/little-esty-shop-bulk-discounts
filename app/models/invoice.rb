@@ -40,7 +40,6 @@ class Invoice < ApplicationRecord
 
   def discounted_amount(invoice_item_id)
     it = InvoiceItem.find(invoice_item_id)
-    item = Item.find(it.item_id)
 
     ((it.quantity * it.unit_price).to_f - ((it.quantity * it.unit_price) * (item_discount(it.id) / 100)))
   end
@@ -59,19 +58,22 @@ class Invoice < ApplicationRecord
 
   def discounted_revenue_for_admin
     invoice_items = self.invoice_items
-
     calculate_discounted_revenue(invoice_items)
+  end
+
+  def update_invoice_items(invoice_items)
+    invoice_items.each do |it|
+      it.update!(discount: item_discount(it.id))
+    end
   end
 end
 
+# self.invoice_items.joins(:items { merchant: :discounts} ).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
 
-
-# self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i
-
-#  self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(CASE
-# #               WHEN invoice_items.quantity >= discounts.quantity_threshold
-# #                  THEN SUM(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)
-# #               END))').to_i
+ # self.merchants.joins(:invoice_items).joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(CASE
+ #               WHEN invoice_items.quantity >= discounts.quantity_threshold
+ #                  THEN SUM(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)
+ #               END))').to_i
 
 
 # joins(:discounts).select(:invoice_items, :discounts).where('invoice_items.quantity >= discounts.quantity_threshold').distinct.sum('(invoice_items.quantity * invoice_items.unit_price) - ((invoice_items.quantity * invoice_items.unit_price) * discounts.percentage)').to_i

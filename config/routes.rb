@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get '/', to: 'application#welcome'
+  get "/merchants/:id/discounts/holiday", to: 'merchant/discounts#holiday', as: 'holiday_discount'
 
   resources :merchants, module: :merchant do
     # get '/dashboard', to: 'dashboard#show', as: 'merchant_dashboard'

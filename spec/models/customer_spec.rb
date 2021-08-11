@@ -108,7 +108,7 @@ RSpec.describe Customer do
 
     describe 'instance methods' do
       it '::successful_transactions' do
-        expect(@customer1.successful_transactions).to eq(3)
+        expect(@customer1.successful_transactions).to eq(2)
       end
     end
   end

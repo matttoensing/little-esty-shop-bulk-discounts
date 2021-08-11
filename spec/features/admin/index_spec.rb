@@ -65,7 +65,7 @@ RSpec.describe 'Admin Index' do
       end
 
       within("#customer-#{@customer1.id}") do
-        expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name}: 3")
+        expect(page).to have_content("#{@customer1.first_name} #{@customer1.last_name}: 2")
       end
 
       within("#customer-#{@customer2.id}") do
