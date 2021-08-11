@@ -12,6 +12,6 @@ class InvoiceItem < ApplicationRecord
   end
 
   def applied_discount
-    self.item.merchant.discounts.group(:id).where("#{self.quantity} >= quantity_threshold").order(quantity_threshold: :desc).first
+    self.item.merchant.discounts.where("#{self.quantity} >= quantity_threshold").order(percentage: :desc).first
   end
 end

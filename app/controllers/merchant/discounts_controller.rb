@@ -35,7 +35,8 @@ class Merchant::DiscountsController < ApplicationController
   def update
     merchant = Merchant.find(params[:merchant_id])
     discount = Discount.find(params[:id])
-    discount.update(discount_params)
+
+    discount.update!(discount_params)
 
     redirect_to merchant_discount_path(merchant.id, discount.id)
   end
@@ -51,6 +52,6 @@ class Merchant::DiscountsController < ApplicationController
   private
 
   def discount_params
-    params.permit(:name, :percentage, :quantity_threshold)
+    params.permit(:percentage, :quantity_threshold, :name)
   end
 end
